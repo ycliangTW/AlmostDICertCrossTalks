@@ -45,8 +45,8 @@ function [Q_opt, diagnostics] = Min_KLDivergence_NSCond(P, Pxy, Dir)
     % subsequent computation
     P_flat = Pjoint(:);
 
-    % Define the sdpvar corresponding to the minimizing distribution Q_flat 
-    % and the auxiliary variables u_flat
+    % Define the sdpvar corresponding to the minimizing joint 
+    % (unconditional) distribution Q_flat and the auxiliary variables u_flat
     Q_flat = sdpvar(size(P_flat,1), 1);
     u_flat = sdpvar(size(P_flat,1), 1);
 
@@ -77,7 +77,11 @@ function [Q_opt, diagnostics] = Min_KLDivergence_NSCond(P, Pxy, Dir)
                 for y = 1:nY
                     for y_prime = 1:nY
                         if y_prime ~= y
-                            constraints = [constraints, sum(Q(a,:,x,y)-Q(a,:,x,y_prime))==0];
+                            if isscalar(Pxy)
+                                constraints = [constraints, sum(Q(a,:,x,y)-Q(a,:,x,y_prime))==0];
+                            else
+                                constraints = [constraints, sum(Q(a,:,x,y)/Pxy(x,y)-Q(a,:,x,y_prime)/Pxy(x,y_prime))==0];
+                            end
                         end
                     end
                 end
@@ -92,7 +96,11 @@ function [Q_opt, diagnostics] = Min_KLDivergence_NSCond(P, Pxy, Dir)
                 for x = 1:nX
                     for x_prime = 1:nX
                         if x_prime ~= x
-                            constraints = [constraints, sum(Q(:,b,x,y)-Q(:,b,x_prime,y))==0];
+                            if isscalar(Pxy)
+                                constraints = [constraints, sum(Q(:,b,x,y)-Q(:,b,x_prime,y))==0];
+                            else
+                                constraints = [constraints, sum(Q(:,b,x,y)/Pxy(x,y)-Q(:,b,x_prime,y)/Pxy(x_prime,y))==0];
+                            end
                         end
                     end
                 end
@@ -118,11 +126,6 @@ function [Q_opt, diagnostics] = Min_KLDivergence_NSCond(P, Pxy, Dir)
         Q_opt_flat = value(Q_flat);
         Q_opt = reshape(Q_opt_flat, [nA, nB, nX, nY]);
 
-%         % Display results
-%         fprintf('Optimal lambda: \n');
-%         disp(lambda_opt);
-%         fprintf('Optimal Q: \n');
-%         disp(Q_opt);
     else
         fprintf('Optimization failed: %s\n', diagnostics.info);
     end
