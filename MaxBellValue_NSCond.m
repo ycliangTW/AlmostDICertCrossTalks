@@ -13,7 +13,7 @@
 %    conditional distribution Q_opt, and the diagnostics information from
 %    the optimization "diagonistics"
 
-%% Copyright (C) 2025 Yeong-Cherng Liang, last modified on 17 Mar 2025
+%% Copyright (C) 2025 Yeong-Cherng Liang, last modified on 18 Mar 2025
 
 function [BellVal, Q_opt, diagnostics] = MaxBellValue_NSCond(beta, Dir)
 
@@ -46,7 +46,7 @@ function [BellVal, Q_opt, diagnostics] = MaxBellValue_NSCond(beta, Dir)
     ];
 
     % Imposing one-way no-singaling constraints from B to A
-    if nargin<3 || (nargin==3 && strcmp(Dir,"B2A"))
+    if nargin<2 || (nargin==2 && ~strcmp(Dir,"A2B"))
         for a = 1:nA
             for x = 1:nX
                 for y = 1:nY
@@ -61,7 +61,7 @@ function [BellVal, Q_opt, diagnostics] = MaxBellValue_NSCond(beta, Dir)
     end
 
     % Imposing one-way no-singaling constraints from A to B
-    if nargin<3 || (nargin==3 && strcmp(Dir,"A2B"))
+    if nargin<2 || (nargin==2 && ~strcmp(Dir,"B2A"))
         for b = 1:nB
             for y = 1:nY
                 for x = 1:nX
