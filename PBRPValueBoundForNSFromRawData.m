@@ -31,7 +31,7 @@
 %    arising from Bell value maximization over the set of NS correlations 
 %    specified by "Dir".
 
-%% Copyright (C) 2025 Yeong-Cherng Liang, last modified on 18 Mar 2025
+%% Copyright (C) 2025 Yeong-Cherng Liang, last modified on 7 Apr 2025
 
 function [pValNS, RNS, DiagMinKL, DiagMaxBell] = PBRPValueBoundForNSFromRawData(BellTestData, Dir, Pxy, BellScenario, NumEst, pCutoff)
 
@@ -59,37 +59,7 @@ options = sdpsettings;
 options.verbose=0;
 options.cachesolvers=1;
 
-NumXY = NTrials;
-
 PWhite = ones(nA,nB,nX,nY)/4;
-
-% Minimizers from the KL divergence optimization
-% PKLNS = cell(NumBellTests,1);
-
-% flagNS = zeros(NumBellTests,1);
-
-% For diagonsis information of the optimization
-% DiagMinKL = cell(NumBellTests,1);
-
-% PBR for the NS hypothesis
-% RNS = cell(NumBellTests,1);
-
-% betaNS = cell(NumBellTests,1);
-
-% Ideally, the bound should be 1; this stores the corrected bound
-% CorrectedBoundNS = zeros(NumBellTests,1);
-
-% Max deviation of the NS conditions when relative frequencies are taken
-% directly as probabilities
-% MaxBtoA = zeros(NumBellTests,1);
-% MaxAtoB = zeros(NumBellTests,1);
-
-% Initialize the two arrays to store the logarithm of the p-value bounds
-% for the two hypotheses to be tested
-% logTNS = zeros(NumBellTests,1);
-
-load('ExtPtNS_N2_M2_K2_All.mat');
-
 
 % Counts and frequencies for all data in a Bell test
 NXY = zeros(nX,nY);
